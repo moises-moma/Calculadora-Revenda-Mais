@@ -8,8 +8,8 @@ export default defineConfig(({ mode }) => {
   // === INSIRA ESTA LINHA AQUI ===
   base: './', 
   
-  servidor:{
-    porta:3000,
+  server:{
+    door:3000,
     // ...
 // ...
       define: {
