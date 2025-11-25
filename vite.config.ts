@@ -3,13 +3,17 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return {
-  // === INSIRA ESTA LINHA AQUI ===
+    // ... Linha 6
+const env = loadEnv(mode, '.', '');
+return { // Corrigido (o 'return' já está certo)
+  // === ESTA LINHA ESTÁ FALTANDO NO SEU ÚLTIMO COMMIT VISTO:
   base: './', 
-  
-  server:{
-    door:3000,
+  // =======================================================
+  server: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
+  // ... resto do arquivo
     // ...
 // ...
       define: {
