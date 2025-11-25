@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
-    retornar {
+    return {
   // === INSIRA ESTA LINHA AQUI ===
   base: './', 
   
