@@ -67,7 +67,7 @@ export default function App() {
     
     // Base Monthly Costs
     let monthlyBase = plan.monthlyPrice;
-    let annualBase = plan.annualPrice; // This is the discounted monthly rate
+    let annualBase = plan.annualPrice; // This is the discounted monthly price
 
     // Services
     state.selectedServices.forEach(srvId => {
@@ -91,7 +91,7 @@ export default function App() {
     Object.entries(state.productQuantities).forEach(([id, qty]) => {
       const prod = ADDITIONAL_PRODUCTS.find(p => p.id === id);
       if (prod) {
-        productsTotal += prod.price * qty;
+        productsTotal += prod.price * (qty as number);
       }
     });
 
@@ -469,24 +469,29 @@ export default function App() {
                                           {formatCurrency(calculations.total12Months.packageTotal)}
                                       </td>
                                   </tr>
+
+                                  {/* PAYMENT METHODS */}
+                                  <tr className="bg-gray-50 border-t border-gray-200">
+                                    <td className="p-3 text-center border-l border-gray-200" colSpan={2}>
+                                       <span className="font-medium text-gray-800 text-xs">Boleto/Pix</span>
+                                    </td>
+                                    <td className="p-3 border-l border-gray-200 text-center">
+                                       <div className="flex flex-col gap-0.5">
+                                          <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 3x</span>
+                                          <span className="text-[10px] text-gray-500">Boleto/Pix em 1x</span>
+                                       </div>
+                                    </td>
+                                    <td className="p-3 border-l border-gray-200 text-center">
+                                       <div className="flex flex-col gap-0.5">
+                                          <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 12x</span>
+                                          <span className="text-[10px] text-gray-500">Boleto/Pix em 1x</span>
+                                       </div>
+                                    </td>
+                                  </tr>
                               </tbody>
                           </table>
                       </div>
 
-                      <div className="bg-gray-50 p-4 border-t border-gray-200 space-y-3">
-                          <div className="flex items-start gap-2 text-xs text-gray-600">
-                             <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1"></div>
-                             <p><strong>1 Mês:</strong> Adesão + Setup + 1ª Mensalidade.</p>
-                          </div>
-                          <div className="flex items-start gap-2 text-xs text-gray-600">
-                             <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1"></div>
-                             <p><strong>3 Meses:</strong> Setup + (Mensalidade x 3). Parcelamento em até 3x no cartão.</p>
-                          </div>
-                          <div className="flex items-start gap-2 text-xs text-gray-600">
-                             <div className="w-1.5 h-1.5 rounded-full bg-brand-red mt-1"></div>
-                             <p className="text-brand-red font-medium"><strong>12 Meses:</strong> Setup + (Mensalidade Anual x 12). Parcelamento em até 12x no cartão.</p>
-                          </div>
-                      </div>
                   </div>
               </div>
           </div>
