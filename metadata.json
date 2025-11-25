@@ -1,0 +1,5 @@
+{
+  "name": "RevendaMais Calculator",
+  "description": "A comprehensive subscription calculator for RevendaMais plans, including vehicle limits, additional services, CRM integrations, and website costs.",
+  "requestFramePermissions": []
+}
