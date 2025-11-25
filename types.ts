@@ -1,7 +1,10 @@
+
 export interface BasePlan {
   id: string;
   name: string;
   vehicles: number;
+  users: number;
+  storage: string;
   monthlyPrice: number;
   annualPrice: number; // The discounted monthly price when paid annually
 }

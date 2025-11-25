@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { 
   PLANS, 
@@ -177,6 +178,10 @@ export default function App() {
               <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {PLANS.map(plan => {
                   const isSelected = state.selectedPlanId === plan.id;
+                  const nameParts = plan.name.split(' (');
+                  const mainName = nameParts[0];
+                  const parenText = nameParts.length > 1 ? `(${nameParts[1]}` : '';
+
                   return (
                     <div 
                       key={plan.id}
@@ -189,20 +194,39 @@ export default function App() {
                       `}
                     >
                       <div className="flex justify-between items-start mb-3">
-                         <h3 className={`font-bold text-lg ${isSelected ? 'text-brand-red' : 'text-gray-800'}`}>
-                           {plan.name}
+                         <h3 className={`font-bold text-lg leading-tight ${isSelected ? 'text-brand-red' : 'text-gray-800'}`}>
+                           {parenText ? (
+                               <div className="flex items-baseline flex-wrap gap-1">
+                                   <span>{mainName}</span>
+                                   <span className="text-[10px] font-semibold opacity-90 tracking-tight transform -translate-y-0.5">
+                                       {parenText}
+                                   </span>
+                               </div>
+                           ) : (
+                               plan.name
+                           )}
                          </h3>
                          <div className={`
-                            w-5 h-5 rounded-full border flex items-center justify-center transition-colors
+                            w-5 h-5 rounded-full border flex items-center justify-center transition-colors shrink-0
                             ${isSelected ? 'border-brand-red bg-brand-red text-white' : 'border-gray-300'}
                          `}>
                             {isSelected && <Check size={12} />}
                          </div>
                       </div>
                       
-                      <div className="flex items-center gap-2 mb-4 text-gray-600">
-                        <Car size={16} />
-                        <span className="font-medium">{plan.vehicles} Veículos</span>
+                      <div className="flex flex-col gap-2 mb-4">
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <Car size={16} />
+                            <span className="font-medium text-sm">{plan.vehicles} Veículos</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <Users size={16} />
+                            <span className="font-medium text-sm">{plan.users} Usuários</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <HardDrive size={16} />
+                            <span className="font-medium text-sm">{plan.storage} Armaz.</span>
+                        </div>
                       </div>
 
                       <div className="mt-auto pt-4 border-t border-gray-100 space-y-1">
@@ -224,7 +248,7 @@ export default function App() {
             {/* ROW 2: SERVICES */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <SectionHeader title="2. Serviços Adicionais" icon={<Plus size={18} />} />
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 {SERVICES.map(service => {
                   const isSelected = state.selectedServices.includes(service.id);
                   return (
@@ -232,36 +256,36 @@ export default function App() {
                       key={service.id}
                       onClick={() => toggleService(service.id)}
                       className={`
-                        cursor-pointer flex flex-col p-3 rounded-lg border transition-all h-full
+                        cursor-pointer flex flex-col p-5 rounded-lg border transition-all h-full
                         ${isSelected
                           ? 'border-blue-500 bg-blue-50/50 shadow-sm' 
                           : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}
                       `}
                     >
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <span className="font-semibold text-sm text-gray-800 leading-snug">{service.name}</span>
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <span className="font-bold text-base text-gray-800 leading-snug">{service.name}</span>
                         <div className={`
-                          shrink-0 w-4 h-4 rounded border flex items-center justify-center mt-0.5
+                          shrink-0 w-5 h-5 rounded border flex items-center justify-center mt-0.5
                           ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300 bg-white'}
                         `}>
-                          {isSelected && <Check size={10} />}
+                          {isSelected && <Check size={14} />}
                         </div>
                       </div>
                       
-                      <div className="mt-auto pt-2 text-xs">
+                      <div className="mt-auto pt-2 text-sm">
                         {service.annualPrice && service.annualPrice !== service.monthlyPrice ? (
-                            <div className="space-y-0.5">
-                                <div className="flex justify-between text-gray-500">
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-gray-600">
                                   <span>Mensal:</span>
                                   <span>{formatCurrency(service.monthlyPrice)}</span>
                                 </div>
-                                <div className="flex justify-between text-green-700 font-medium">
+                                <div className="flex justify-between text-green-700 font-bold">
                                   <span>Anual:</span>
                                   <span>{formatCurrency(service.annualPrice)}</span>
                                 </div>
                             </div>
                         ) : (
-                            <div className="font-semibold text-gray-700 text-right">
+                            <div className="font-bold text-gray-700 text-right text-base">
                               {formatCurrency(service.monthlyPrice)}
                             </div>
                         )}
@@ -476,16 +500,10 @@ export default function App() {
                                        <span className="font-medium text-gray-800 text-xs">Boleto/Pix</span>
                                     </td>
                                     <td className="p-3 border-l border-gray-200 text-center">
-                                       <div className="flex flex-col gap-0.5">
-                                          <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 3x</span>
-                                          <span className="text-[10px] text-gray-500">Boleto/Pix em 1x</span>
-                                       </div>
+                                       <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 3x</span>
                                     </td>
                                     <td className="p-3 border-l border-gray-200 text-center">
-                                       <div className="flex flex-col gap-0.5">
-                                          <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 12x</span>
-                                          <span className="text-[10px] text-gray-500">Boleto/Pix em 1x</span>
-                                       </div>
+                                       <span className="font-bold text-blue-900 text-xs">Cartão de Crédito em 12x</span>
                                     </td>
                                   </tr>
                               </tbody>
