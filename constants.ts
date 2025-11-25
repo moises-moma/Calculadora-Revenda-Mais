@@ -4,7 +4,7 @@ export const PLANS: BasePlan[] = [
   { id: 'p0.5', name: 'Plano 0.5', vehicles: 25, monthlyPrice: 450, annualPrice: 400 },
   { id: 'p1.0', name: 'Plano 1.0', vehicles: 50, monthlyPrice: 550, annualPrice: 500 },
   { id: 'p2.0', name: 'Plano 2.0', vehicles: 100, monthlyPrice: 750, annualPrice: 700 },
-  { id: 'p3.0', name: 'Plano 3.0', vehicles: 150, monthlyPrice: 950, annualPrice: 900 },
+  { id: 'p3.0', name: 'Plano 3.0', vehicles: 150, monthlyPrice: 850, annualPrice: 800 },
 ];
 
 export const SERVICES: AdditionalService[] = [
@@ -20,8 +20,8 @@ export const WEBSITES: WebsiteOption[] = [
 ];
 
 export const CRM_OPTIONS: CrmOption[] = [
-  { id: 'whats', name: 'Integração Whats', price: 240, setupFee: 390 },
-  { id: 'no_whats', name: 'Sem Integração Whats', price: 150, setupFee: 0 },
+  { id: 'whats', name: 'Integração Whats (3 usuários)', price: 240, setupFee: 390 },
+  { id: 'no_whats', name: 'Sem Integração Whats (3 usuários)', price: 150, setupFee: 0 },
 ];
 
 export const ADDITIONAL_PRODUCTS: AdditionalProduct[] = [
