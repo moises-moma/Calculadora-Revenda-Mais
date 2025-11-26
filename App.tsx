@@ -52,6 +52,25 @@ export default function App() {
     });
   };
 
+  const toggleCrm = (id: string) => {
+    setState(prev => {
+        const isDeselecting = prev.selectedCrmId === id;
+        const newCrmId = isDeselecting ? null : id;
+        
+        const newQuantities = { ...prev.productQuantities };
+        // If we are not on 'whats', clear 'user_whats'
+        if (newCrmId !== 'whats') newQuantities['user_whats'] = 0;
+        // If we are not on 'no_whats', clear 'user_no_whats'
+        if (newCrmId !== 'no_whats') newQuantities['user_no_whats'] = 0;
+
+        return {
+            ...prev,
+            selectedCrmId: newCrmId,
+            productQuantities: newQuantities
+        };
+    });
+  };
+
   const updateQuantity = (id: string, delta: number) => {
     setState(prev => ({
       ...prev,
@@ -144,6 +163,8 @@ export default function App() {
 
   }, [state]);
 
+  const crmSpecificProducts = ['user_whats', 'user_no_whats'];
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 font-sans text-slate-800">
       <div className="max-w-[1800px] mx-auto space-y-6">
@@ -219,13 +240,17 @@ export default function App() {
                             <Car size={16} />
                             <span className="font-medium text-sm">{plan.vehicles} Veículos</span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                            <Users size={16} />
-                            <span className="font-medium text-sm">{plan.users} Usuários</span>
+                        <div className="flex items-start gap-2 text-gray-600">
+                             <Users size={16} className="mt-0.5 shrink-0" />
+                             <div className="flex flex-col">
+                                <span className="font-medium text-sm">{plan.users} Usuários</span>
+                             </div>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                            <HardDrive size={16} />
-                            <span className="font-medium text-sm">{plan.storage} Armaz.</span>
+                        <div className="flex items-start gap-2 text-gray-600">
+                            <HardDrive size={16} className="mt-0.5 shrink-0" />
+                            <div className="flex flex-col">
+                                <span className="font-medium text-sm">{plan.storage} Armaz.</span>
+                            </div>
                         </div>
                       </div>
 
@@ -248,7 +273,7 @@ export default function App() {
             {/* ROW 2: SERVICES */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <SectionHeader title="2. Serviços Adicionais" icon={<Plus size={18} />} />
-              <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
                 {SERVICES.map(service => {
                   const isSelected = state.selectedServices.includes(service.id);
                   return (
@@ -256,23 +281,23 @@ export default function App() {
                       key={service.id}
                       onClick={() => toggleService(service.id)}
                       className={`
-                        cursor-pointer flex flex-col p-5 rounded-lg border transition-all h-full
+                        cursor-pointer flex flex-col p-6 rounded-lg border transition-all h-full
                         ${isSelected
                           ? 'border-blue-500 bg-blue-50/50 shadow-sm' 
                           : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}
                       `}
                     >
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <span className="font-bold text-base text-gray-800 leading-snug">{service.name}</span>
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <span className="font-bold text-xl text-gray-800 leading-snug">{service.name}</span>
                         <div className={`
-                          shrink-0 w-5 h-5 rounded border flex items-center justify-center mt-0.5
+                          shrink-0 w-6 h-6 rounded border flex items-center justify-center mt-1
                           ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300 bg-white'}
                         `}>
-                          {isSelected && <Check size={14} />}
+                          {isSelected && <Check size={16} />}
                         </div>
                       </div>
                       
-                      <div className="mt-auto pt-2 text-sm">
+                      <div className="mt-auto pt-3 text-lg">
                         {service.annualPrice && service.annualPrice !== service.monthlyPrice ? (
                             <div className="space-y-1">
                                 <div className="flex justify-between text-gray-600">
@@ -285,7 +310,7 @@ export default function App() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="font-bold text-gray-700 text-right text-base">
+                            <div className="font-bold text-gray-700 text-right text-xl">
                               {formatCurrency(service.monthlyPrice)}
                             </div>
                         )}
@@ -344,31 +369,64 @@ export default function App() {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
                 <SectionHeader title="4. CRM" icon={<Users size={18} />} />
                 <div className="p-4 space-y-3 flex-1">
-                  {CRM_OPTIONS.map(crm => (
-                    <div 
-                      key={crm.id}
-                      onClick={() => setState(s => ({ 
-                          ...s, 
-                          selectedCrmId: s.selectedCrmId === crm.id ? null : crm.id 
-                      }))}
-                      className={`
-                        cursor-pointer p-3 rounded-lg border transition-all relative
-                        ${state.selectedCrmId === crm.id 
-                          ? 'border-brand-red bg-red-50/50' 
-                          : 'border-gray-200 hover:bg-gray-50'}
-                      `}
-                    >
-                      <div className="flex justify-between items-center mb-1">
-                          <span className="font-medium text-sm text-gray-700">{crm.name}</span>
-                          <span className="font-bold text-sm text-gray-900">{formatCurrency(crm.price)}</span>
-                      </div>
-                      {crm.setupFee > 0 && (
-                          <div className="text-[10px] text-brand-red font-bold uppercase flex items-center gap-1">
-                              + Setup {formatCurrency(crm.setupFee)}
+                  {CRM_OPTIONS.map(crm => {
+                    const isSelected = state.selectedCrmId === crm.id;
+                    const relatedProductId = crm.id === 'whats' ? 'user_whats' : (crm.id === 'no_whats' ? 'user_no_whats' : null);
+                    const product = relatedProductId ? ADDITIONAL_PRODUCTS.find(p => p.id === relatedProductId) : null;
+                    
+                    return (
+                        <div 
+                          key={crm.id}
+                          onClick={() => toggleCrm(crm.id)}
+                          className={`
+                            cursor-pointer rounded-lg border transition-all relative overflow-hidden
+                            ${isSelected
+                              ? 'border-brand-red bg-red-50/30' 
+                              : 'border-gray-200 hover:bg-gray-50'}
+                          `}
+                        >
+                          <div className="p-3">
+                              <div className="flex justify-between items-center">
+                                  <div className="flex flex-col">
+                                      <span className="font-medium text-sm text-gray-800">{crm.name}</span>
+                                      {crm.setupFee > 0 && (
+                                          <span className="text-[10px] text-brand-red font-bold uppercase mt-0.5">
+                                              + Setup {formatCurrency(crm.setupFee)}
+                                          </span>
+                                      )}
+                                  </div>
+                                  <span className="font-bold text-sm text-gray-900">{formatCurrency(crm.price)}</span>
+                              </div>
+                              
+                              {isSelected && product && (
+                                <div className="mt-3 pt-3 border-t border-red-100 flex items-center justify-between" onClick={e => e.stopPropagation()}>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-bold text-gray-700">{product.name}</span>
+                                        <span className="text-[10px] text-gray-500">{formatCurrency(product.price)}/mês</span>
+                                    </div>
+                                     <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                                        <button 
+                                          onClick={() => updateQuantity(product.id, -1)}
+                                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 text-gray-600 active:bg-gray-200"
+                                        >
+                                          -
+                                        </button>
+                                        <div className="w-8 text-center font-bold text-sm">
+                                          {state.productQuantities[product.id] || 0}
+                                        </div>
+                                        <button 
+                                          onClick={() => updateQuantity(product.id, 1)}
+                                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 text-gray-600 active:bg-gray-200"
+                                        >
+                                          +
+                                        </button>
+                                      </div>
+                                </div>
+                              )}
                           </div>
-                      )}
-                    </div>
-                  ))}
+                        </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -376,7 +434,9 @@ export default function App() {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
                 <SectionHeader title="5. Extras" icon={<HardDrive size={18} />} />
                 <div className="p-4 space-y-3 flex-1">
-                  {ADDITIONAL_PRODUCTS.map(prod => (
+                  {ADDITIONAL_PRODUCTS
+                    .filter(prod => !crmSpecificProducts.includes(prod.id))
+                    .map(prod => (
                     <div key={prod.id} className="flex items-center justify-between p-2 border-b border-gray-100 last:border-0">
                       <div className="flex flex-col">
                         <span className="text-gray-700 font-medium text-sm">{prod.name}</span>

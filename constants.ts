@@ -29,6 +29,8 @@ export const ADDITIONAL_PRODUCTS: AdditionalProduct[] = [
   { id: 'user', name: 'Usuário Adicional (s/chat premium)', price: 20 },
   { id: 'user_premium', name: 'Usuário Adicional (c/chat premium)', price: 50 },
   { id: 'cnpj', name: 'CNPJ Adicional', price: 90 },
+  { id: 'user_whats', name: 'Usuário Adicional com Whats', price: 80 },
+  { id: 'user_no_whats', name: 'Usuário Adicional sem Whats', price: 50 },
 ];
 
 export const ADHESION_FEE = 1000;
